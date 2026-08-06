@@ -4,7 +4,7 @@ require_once 'includes/config.php';
 if (isset($_SESSION['user_id'])) {
     $r = $_SESSION['user_role'];
     $map = ['admin'=>'admin/dashboard.php','teacher'=>'teacher/dashboard.php','student'=>'student/dashboard.php','parent'=>'parent/dashboard.php'];
-    header('Location: /' . ($map[$r] ?? 'index.php'));
+    header('Location: ' . ($map[$r] ?? 'index.php'));
     exit;
 }
 
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_name'] = $user['full_name'];
             $_SESSION['username']  = $user['username'];
             $map = ['admin'=>'admin/dashboard.php','teacher'=>'teacher/dashboard.php','student'=>'student/dashboard.php','parent'=>'parent/dashboard.php'];
-            header('Location: /' . $map[$role]);
+            header('Location: ' . $map[$role]);
             exit;
         } else {
             $error = "Login yoki parol noto'g'ri!";

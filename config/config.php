@@ -3,7 +3,18 @@
 // ZiyoCRM - Konfiguratsiya fayli
 // ==============================================
 
-define('DB_FILE', __DIR__ . '/../database/ziyo_crm.db');
+if (isset($_SERVER['VERCEL']) || isset($_ENV['VERCEL']) || getenv('VERCEL')) {
+    $tmp_dir = '/tmp/database';
+    if (!is_dir($tmp_dir)) @mkdir($tmp_dir, 0777, true);
+    $tmp_db = $tmp_dir . '/ziyo_crm.db';
+    $source_db = __DIR__ . '/../database/ziyo_crm.db';
+    if (!file_exists($tmp_db) && file_exists($source_db)) {
+        @copy($source_db, $tmp_db);
+    }
+    define('DB_FILE', file_exists($tmp_db) ? $tmp_db : __DIR__ . '/../database/ziyo_crm.db');
+} else {
+    define('DB_FILE', __DIR__ . '/../database/ziyo_crm.db');
+}
 
 // === TELEGRAM BOT SOZLAMALARI ===
 // BotFather dan olgan token ni shu yerga yozing:
@@ -292,11 +303,11 @@ function sendTelegram($chat_id, $message) {
 // === FOYDALANUVCHI TEKSHIRISH ===
 function requireLogin($role = null) {
     if (!isset($_SESSION['user_id'])) {
-        header('Location: /index.php');
+        header('Location: ../index.php');
         exit;
     }
     if ($role && $_SESSION['user_role'] !== $role) {
-        header('Location: /index.php?error=access_denied');
+        header('Location: ../index.php?error=access_denied');
         exit;
     }
 }
